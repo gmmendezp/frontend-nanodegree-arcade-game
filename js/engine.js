@@ -27,6 +27,8 @@ var Engine = (function(global) {
 
     canvas.width = 505;
     canvas.height = 606;
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "white";
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -81,6 +83,7 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
+        checkWinState();
     }
 
     /* This is called by the update function and loops through all of the
@@ -91,6 +94,9 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
+        gems.forEach(function(gem) {
+            gem.update(dt);
+        });
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
@@ -98,16 +104,36 @@ var Engine = (function(global) {
     }
 
     /* This is called by the update function and loops through all of the
-     * objects within your allEnemies array as defined in app.js and calls
-     * their checkCollition() methods to check if the player has collided.
-     * It will call the player.reset if it collides with any enemy
+     * objects within your allEnemies and gems array as defined in app.js
+     * calss their checkCollition() methods to check if the player has collided.
+     * It will call the reset function if it collides with any enemy
+     * And adds to the score if it collides with a gem
      */
     function checkCollisions() {
-        allEnemies.forEach(function(enemy) {
-            if(enemy.checkCollition(player)) {
-                player.reset();
+        // create copy so we can remove inside forEach
+        var tempGems = gems.slice(0);
+        tempGems.forEach(function(gem, index) {
+            if(gem.checkCollition(player)) {
+                scorer.add(gem.points);
+                gems.splice(index, 1);
             }
         });
+        allEnemies.forEach(function(enemy) {
+            if(enemy.checkCollition(player)) {
+                scorer.clear();
+                reset();
+            }
+        });
+    }
+
+    /* This is called by the update function and calls the hasWon method
+     * of the player as defined in app.js to check if it has won
+     */
+    function checkWinState() {
+        if(player.hasWon()) {
+            scorer.add(10);
+            reset();
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -160,19 +186,23 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        gems.forEach(function(gem) {
+            gem.render();
+        });
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
         player.render();
+        scorer.render();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
+    /* This function handles game reset
      */
     function reset() {
-        // noop
+        createGems();
+        createEnemies();
+        player.reset();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -185,7 +215,8 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
-        'images/char-princess-girl.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png'
     ]);
     Resources.onReady(init);
 
