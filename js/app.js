@@ -1,4 +1,9 @@
-// Character class, parent class for enemies and player
+/*
+ * Character class
+ * Parent class for enemies, player and gems
+ *
+ */
+
 var Character = function(sprite, x, y, speed) {
   this.sprite = sprite;
   this.x = x;
@@ -27,7 +32,10 @@ Character.prototype.checkCollition = function(object) {
   return xDiff <= 80 && xDiff >= -75 && yDiff === 0;
 };
 
-// Enemies our player must avoid
+/*
+ * Enemies our player must avoid
+ *
+ */
 var Enemy = function(y, speed) {
   Character.call(this, 'images/enemy-bug.png', -105, y, speed);
 };
@@ -43,7 +51,11 @@ Enemy.prototype.update = function(dt) {
   }
 };
 
-// Player class, the user is going to use this character
+/*
+ * Player class
+ * The user is going to use this character
+ *
+ */
 var Player = function() {
   Character.call(this, 'images/char-boy.png', 200, 380, 0);
   this.xStep = 100;
@@ -51,32 +63,15 @@ var Player = function() {
 };
 Player.prototype = Object.create(Character.prototype);
 Player.prototype.constructor = Player;
+
 // Reset the position of the player
 Player.prototype.restartPosition = function() {
   this.x = this.initialX;
   this.y = this.initialY;
 };
+
 Player.prototype.reset = function() {
   this.restartPosition();
-};
-
-// Gem class, collectable gems
-var Gem = function(sprite, x, y, points) {
-  Character.call(this, sprite, x, y, 0);
-  this.points = points;
-};
-Gem.prototype = Object.create(Character.prototype);
-Gem.prototype.constructor = Gem;
-// Draw the character on the screen, required method for game
-Gem.prototype.render = function() {
-  ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 50, 70);
-};
-// Collition detection of the character with gems
-// Parameter: object, check if the character collides with it
-Gem.prototype.checkCollition = function(object) {
-  var xDiff = this.x - 25 - object.x;
-  var yDiff = this.y - 80 - object.y;
-  return xDiff === 0 && yDiff === 0;
 };
 
 // Update position based on input
@@ -102,7 +97,34 @@ Player.prototype.hasWon = function() {
   return this.y <= -20;
 };
 
-// Class to mantain the score
+/*
+ * Gem class
+ * The user is going to collect these for points
+ *
+ */
+var Gem = function(sprite, x, y, points) {
+  Character.call(this, sprite, x, y, 0);
+  this.points = points;
+};
+Gem.prototype = Object.create(Character.prototype);
+Gem.prototype.constructor = Gem;
+// Draw the character on the screen, required method for game
+Gem.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 50, 70);
+};
+// Collition detection of the character with gems
+// Parameter: object, check if the character collides with it
+Gem.prototype.checkCollition = function(object) {
+  var xDiff = this.x - 25 - object.x;
+  var yDiff = this.y - 80 - object.y;
+  return xDiff === 0 && yDiff === 0;
+};
+
+
+/*
+ * Class to mantain the score
+ *
+ */
 var Scorer = function() {
   this.score = 0;
   this.x = 10;
@@ -139,6 +161,7 @@ var createEnemies = function() {
     }
   }
 };
+
 // All gems that can be collected by the player
 var gems = [];
 // function to populate gems

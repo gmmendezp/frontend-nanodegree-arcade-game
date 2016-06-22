@@ -1,6 +1,17 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission.
+This is a Frogger-style game. It is an assignment for the Udacity Front-End Nanodegree.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+## Running the game
+To run the game perform the following steps:
+* Download this github repo
+* Open the project folder
+* Open the `index.html` file in your prefered browser
+
+## Playing the game
+* Use the arrow keys to move around the field
+* Grass tiles are safe ground (No enemies will go through it)
+* Avoid being hit by the bug enemies
+* Get to the water or pick gems to earn points
+* If you get hit by an enemy the score resets to zero
